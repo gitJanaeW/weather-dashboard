@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;1,100&display=swap');
+
+:root{
+    --primary-color: rgb(0, 56, 139);
+    --secondary-color: rgb(105, 199, 246);
+}
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html{
+    font-family: Noto Sans;
+}
+
+/* HEADER */
+header{
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    padding: 2vh;
+}
+
+header h1{
+    color: whitesmoke;
+}
+
+/* BOTH SECTIONS */
+.search-and-forecast{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* SEARCH SECTION */
+.search-section{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin: 2%;
+}
+
+.search-form{
+    border-bottom: 2px solid gray;
+    margin: 8px;
+    padding-bottom: 8px;
+}
+
+
+input{
+    width: 80%;
+    height: 5vh;
+    margin: 5px 0;
+    padding-left: 2px;
+    border-radius: 5px;
+}
+
+.btn{
+    width: 30%;
+    padding: 15px;
+    margin: 5px 0;
+    font-size: large;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+}
+
+.recent-item{
+    display: flex;
+    justify-content: center;
+    font-size: larger;
+    background-color: var(--primary-color);
+    color: whitesmoke;
+    border-radius: 5px;
+    width: 80%;
+    padding: 12px 0;
+    margin: 15px auto;
+}
+
+/* 5 DAY FORCAST */
+.forecast-section{
+    display: flex;
+    flex-direction: column;
+    margin: 1%;
+    width: 65%;
+}
+
+.city-info{
+    background-color: var(--secondary-color);
+}
+
+.city-info, .five-day-forecast{
+    border-radius: 3px;
+    padding: 10px 12px 14px 12px;
+}
+.city-stats{
+    margin-left: 16px;
+}
+
+.city-header{
+    display: flex;
+    align-items:flex-end;
+}
+
+/* all children of city header */
+.city-header > *{
+    margin: 0 7px;
+}
+
+.city-date{
+    font-size: larger;
+    margin-bottom: 3px;
+}
+
+.five-day-forecast h2{
+    margin-bottom: 8px;
+}
+
+.day-blocks{
+    display: flex;
+    justify-content: space-around;
+}
+
+.day-block{
+    text-align: center;
+    background-color: grey;
+    width: 20%;
+    max-width: 150px;
+    height: 23vh;
+    padding: 5px 0;
+    margin: 2px 1.5%;
+    border-radius: 9px;
+}
+
+#weather-icon{
+    font-size: x-large;
+    margin: 8px 0 20px 0;
+}

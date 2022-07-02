@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Weather Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+    <div class="search-and-forecast">
+        <section class="search-section">
+            <div class="search-form">
+                <form class="" id="city-search">
+                    <label for="username" class="card-body"><h2>Search for a City</h2></label>
+                    <input name="username" id="username" type="text" autofocus="true" class="input"><br>
+                    <button type="submit" class="btn">Search</button>
+                </form>
+            </div>
+            <div class="recent-list">
+                <div class="recent-item">Toronto</div>
+                <div class="recent-item">San Francisco</div>
+            </div>
+        </section>
+        <main class="forecast-section">    
+            <div class="city-info">
+                <div class="city-header">
+                    <h1 class="city-name">Toronto</h1>
+                    <h1 class="city-date">03/08/22</h1>
+                </div>
+                <div class="city-stats">
+                    <p id="city-temp">Temp: <span id="city-temp-span"></span></p>
+                    <p id="city-wind">Wind: <span id="city-wind-span"></span></p>
+                    <p id="city-humidity">Humidity: <span id="city-humidity-span"></span></p>
+                    <p id="city-uv-index">UV Index: <span id="city-uv-span"></span></p>
+                </div>
+                
+            </div>
+            <div class="five-day-forecast">
+                <h2>5-Day Forecast:</h2>
+                <div class="day-blocks">
+                    <div class="day-block">
+                    <p class="date">03/08/22</p>
+                        <p id="weather-icon">☀️</p>
+                        <div class="day-stats">
+                            <p class="temp">Temp: <span class=""></span></p>
+                            <p class="wind">Wind: <span class=""></span></p>
+                            <p class="humidity">Humidity: <span class=""></span></p>
+                        </div>
+                </div>
+                    <div class="day-block">
+                        <p class="date">03/08/22</p>
+                        <p id="weather-icon">☀️</p>
+                        <div class="day-stats">
+                            <p class="temp">Temp: <span class=""></span></p>
+                            <p class="wind">Wind: <span class=""></span></p>
+                            <p class="humidity">Humidity: <span class=""></span></p>
+                        </div>
+                    </div>
+                    <div class="day-block">
+                        <p class="date">03/08/22</p>
+                        <p id="weather-icon">☀️</p>
+                        <div class="day-stats">
+                            <p class="temp">Temp: <span class=""></span></p>
+                            <p class="wind">Wind: <span class=""></span></p>
+                            <p class="humidity">Humidity: <span class=""></span></p>
+                        </div>
+                    </div>
+                    <div class="day-block">
+                        <p class="date">03/08/22</p>
+                        <p id="weather-icon">☀️</p>
+                        <div class="day-stats">
+                            <p class="temp">Temp: <span class=""></span></p>
+                            <p class="wind">Wind: <span class=""></span></p>
+                            <p class="humidity">Humidity: <span class=""></span></p>
+                        </div>
+                    </div>
+                    <div class="day-block">
+                        <p class="date">03/08/22</p>
+                        <p id="weather-icon">☀️</p>
+                        <div class="day-stats">
+                            <p class="temp">Temp: <span class=""></span></p>
+                            <p class="wind">Wind: <span class=""></span></p>
+                            <p class="humidity">Humidity: <span class=""></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>
