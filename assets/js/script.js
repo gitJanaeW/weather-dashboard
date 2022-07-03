@@ -16,10 +16,13 @@ var input = undefined;
 var promptEl = document.createElement("p");
 var allCityDetails = undefined;
 var allForecastDetails = undefined;
-// Checkers
+// Checkers and incrementors
 var emptyPage = false;
+var j = 5;
 // time and date
 var m = moment().format("dddd, MMMM Do, YYYY, h:mm a");
+// var dt_text = moment().format("YYYY-MM-DD hh:mm:ss");
+
 
 // PROMPT USER TO INPUT CITY
 function createEmptyPage(){
@@ -62,7 +65,9 @@ function fetchCityWeather(cityName){
                 // save data globally
                 allCityDetails = data;
                 // push that data into getResults()
-                returnResults(data);
+                fetchFiveDayForecast();
+                printCityInfo();
+
             });
         }else{
             promptEl.textContent = "Error: City Name Not Found.";
@@ -75,14 +80,16 @@ function fetchCityWeather(cityName){
 
 function fetchFiveDayForecast(){
     var latLong = [allCityDetails.coord.lat, allCityDetails.coord.lon]
-    var apiUrl = "api.openweathermap.org/data/2.5/forecast?lat=" + latLong[0] + "&lon=" + latLong[1] + "&appid=20d2e8b234ab2aab32059e9826a39af0";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLong[0] + "&lon=" + latLong[1] + "&appid=20d2e8b234ab2aab32059e9826a39af0";
     console.log("FETCHED:", apiUrl)
     fetch(apiUrl).then(function(response){
         if(response.ok){
             // Parse the response (data) with json
             response.json().then(function(data){
                 // save data globally
+                console.log(allForecastDetails);
                 allForecastDetails = data;
+                console.log(allForecastDetails)
             });
         }else{
             promptEl = "Error: City Forecast Not Found.";
@@ -130,7 +137,7 @@ function printCityInfo(){
         var dayBlockEl = document.createElement("div");
         allDayBlocks.appendChild(dayBlockEl);
 
-        // For each day block, 
+        // For each day block, loop 5 times to add each stat
         for(var x = 0; x < 5; x++){
             var dayStatEl = document.createElement("p");
             dayStatEl.className = "day-block-text"
@@ -138,16 +145,26 @@ function printCityInfo(){
                 // get the next 5 days of the week
                 dayStatEl.textContent = getNextFiveDays(i);
             }else if(x === 1){
+                // get the weather icon
                 dayStatEl.textContent = "icn";
                 dayStatEl.setAttribute("id", "weather-icon");
             }else if(x === 2){
                 // get the temperature
-                
-                dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
+                if(i = 0){ // If it's the first of 5 days
+                    dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
+                }else{
+                    j += 8;
+                    console.log(j, allForecastDetails);
+                    dayStatEl.textContent = "Temp: " + allForecastDetails.list[j].main.temp;
+                }
             }else if(x === 3){
-                dayStatEl.textContent = "Wind: " + allCityDetails.wind.speed;
+                // get the wind speed
+                console.log(j);
+                dayStatEl.textContent = "Wind: " + allForecastDetails.list[j].wind.speed;
             }else if(x === 4){
-                dayStatEl.textContent = "Humidity: " + allCityDetails.main.humidity;
+                // get the humidity
+                console.log(j);
+                dayStatEl.textContent = "Humidity: " + allForecastDetails.list[j].main.humidity;
             }else{
                 console.log("Out of range");
             }
@@ -156,6 +173,7 @@ function printCityInfo(){
         }
                     
     }
+    j = 5;
 }
 
 function getNextFiveDays(dayNum){
@@ -180,8 +198,7 @@ function getNextFiveDays(dayNum){
 
 // GET THE RESULTS
 function returnResults(cityResults){
-    printCityInfo();
-    console.log("long", cityResults.coord.lon);
+
 }
 createEmptyPage();
 
