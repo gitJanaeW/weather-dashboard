@@ -90,9 +90,10 @@ input{
     background-color: var(--secondary-color);
 }
 
-.city-info, .five-day-forecast{
+.city-info{
     border-radius: 3px;
     padding: 10px 12px 14px 12px;
+    margin-bottom: 20px;
 }
 .city-stats{
     margin-left: 16px;
@@ -127,10 +128,15 @@ input{
     background-color: grey;
     width: 20%;
     max-width: 150px;
-    height: 23vh;
+    height: 25vh;
     padding: 5px 0;
-    margin: 2px 1.5%;
+    margin: 2px 1%;
     border-radius: 9px;
+}
+
+.day-block-text{
+    font-size: small;
+    color: whitesmoke;
 }
 
 #weather-icon{
@@ -151,4 +157,20 @@ input{
     opacity: 85%;
     font-size: larger;
     text-align: center;
+}
+
+/* MEDIA QUERY */
+@media screen and (max-width: 910px) {
+    .search-and-forecast{
+        flex-direction: column;
+    }
+
+    .search-section{
+        width: 50%;
+    }
+
+    .forecast-section{
+        width: 95%;
+        margin: auto;
+    }
 }

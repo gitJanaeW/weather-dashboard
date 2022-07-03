@@ -4,21 +4,22 @@ var forecastSectionEl = document.querySelector(".forecast-section");
 var searchBtnEl = document.querySelector(".search-btn");
 var inputEl = document.querySelector(".input");
 var cityInfoEl = document.querySelector(".city-info");
-var cityStatsEl = document.querySelector(".city-stats");
+var fiveDayForecastEl = document.querySelector(".five-day-forecast");
 var cityNameEl = document.querySelector(".city-name");
 var cityDateEl = document.querySelector(".city-date");
 var cityStatsEl = document.querySelector(".city-stats");
+var allDayBlocks = document.querySelector(".day-blocks");
 
 var emptyMainEl = document.createElement("div");
 var input = undefined;
 // Global elements
 var promptEl = document.createElement("p");
 var allCityDetails = undefined;
+var allForecastDetails = undefined;
 // Checkers
 var emptyPage = false;
 // time and date
 var m = moment().format("dddd, MMMM Do, YYYY, h:mm a");
-
 
 // PROMPT USER TO INPUT CITY
 function createEmptyPage(){
@@ -53,7 +54,7 @@ function getCityInput(e){
 // FETCH API AND PARSE RESULTS
 function fetchCityWeather(cityName){
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=20d2e8b234ab2aab32059e9826a39af0";
-    console.log("apiUrl", apiUrl);
+    console.log("City:", apiUrl);
     fetch(apiUrl).then(function(response){
         if(response.ok){
             // Parse the response (data) with json
@@ -72,32 +73,117 @@ function fetchCityWeather(cityName){
     
 }
 
-// GET THE RESULTS FOR THE CITY SELECTED
-function returnResults(cityResults){
-    printCityInfo();
-    printFiveDayForecast();
-    console.log("long", cityResults.coord.lon);
+function fetchFiveDayForecast(){
+    var latLong = [allCityDetails.coord.lat, allCityDetails.coord.lon]
+    var apiUrl = "api.openweathermap.org/data/2.5/forecast?lat=" + latLong[0] + "&lon=" + latLong[1] + "&appid=20d2e8b234ab2aab32059e9826a39af0";
+    console.log("FETCHED:", apiUrl)
+    fetch(apiUrl).then(function(response){
+        if(response.ok){
+            // Parse the response (data) with json
+            response.json().then(function(data){
+                // save data globally
+                allForecastDetails = data;
+            });
+        }else{
+            promptEl = "Error: City Forecast Not Found.";
+            promptEl.style.fontStyle =  "italic";
+            promptEl.style.fontWeight = "bold";
+        }
+    });
 }
 
 function printCityInfo(){
+    // remove empty page, if any
     if(emptyPage){
         forecastSectionEl.removeChild(emptyMainEl);
     }
+
+    // create city info section
     cityInfoEl.removeAttribute("hidden");
-    // create city header info
+
     cityNameEl.textContent = allCityDetails.name;
     cityDateEl.textContent = m;
-    // create city stats
-    for(var i = 0; i < cityStatsEl.childElementCount; i++){
+
+    for(var i = 0; i < 4; i++){
+        var cityStatItemEl = document.createElement("p");
         
+        if(i === 0){
+            cityStatItemEl.textContent = "Temp:";
+        }else if(i === 1){
+            cityStatItemEl.textContent = "Wind:";
+        }else if(i === 2){
+            cityStatItemEl.textContent = "Humidity:";
+        }else if(i === 3){
+            cityStatItemEl.textContent = "UV Index:";
+        }else{
+            console.log("Out of range");
+        }
+
+        cityStatsEl.appendChild(cityStatItemEl);
+    }
+
+    // create 5 day forecast section
+    fiveDayForecastEl.removeAttribute("hidden");
+
+    // Create 5 days blocks
+    for(var i = 0; i < 5; i++){
+        var dayBlockEl = document.createElement("div");
+        allDayBlocks.appendChild(dayBlockEl);
+
+        // For each day block, 
+        for(var x = 0; x < 5; x++){
+            var dayStatEl = document.createElement("p");
+            dayStatEl.className = "day-block-text"
+            if(x === 0){
+                // get the next 5 days of the week
+                dayStatEl.textContent = getNextFiveDays(i);
+            }else if(x === 1){
+                dayStatEl.textContent = "icn";
+                dayStatEl.setAttribute("id", "weather-icon");
+            }else if(x === 2){
+                // get the temperature
+                
+                dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
+            }else if(x === 3){
+                dayStatEl.textContent = "Wind: " + allCityDetails.wind.speed;
+            }else if(x === 4){
+                dayStatEl.textContent = "Humidity: " + allCityDetails.main.humidity;
+            }else{
+                console.log("Out of range");
+            }
+            dayBlockEl.className = "day-block";
+            dayBlockEl.appendChild(dayStatEl);
+        }
+                    
     }
 }
 
-function printFiveDayForecast(){
-    console.log("print five day forecast");
+function getNextFiveDays(dayNum){
+    var dayOfWeek = undefined;
+    if(dayNum === 0){
+        dayOfWeek = moment().format("ddd, MMM Do");
+    }else if(dayNum === 1){
+        dayOfWeek = moment().add(1,"days").format("ddd, MMM Do");
+    }else if(dayNum === 2){
+        dayOfWeek = moment().add(2,"days").format("ddd, MMM Do");
+    }else if(dayNum === 3){
+        dayOfWeek = moment().add(3,"days").format("ddd, MMM Do");
+    }else if(dayNum === 4){
+        dayOfWeek = moment().add(4,"days").format("ddd, MMM Do");
+    }else{
+        dayOfWeek = "Exceeded 5-day limit";
+    }
+    console.log(dayOfWeek);
+    return dayOfWeek;
 }
 
 
+// GET THE RESULTS
+function returnResults(cityResults){
+    printCityInfo();
+    console.log("long", cityResults.coord.lon);
+}
 createEmptyPage();
 
+// EVENT LISTENERS
 searchBtnEl.addEventListener("click", getCityInput);
