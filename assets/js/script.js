@@ -66,7 +66,6 @@ function fetchCityWeather(cityName){
                 allCityDetails = data;
                 // push that data into getResults()
                 fetchFiveDayForecast();
-                printCityInfo();
 
             });
         }else{
@@ -87,9 +86,10 @@ function fetchFiveDayForecast(){
             // Parse the response (data) with json
             response.json().then(function(data){
                 // save data globally
-                console.log(allForecastDetails);
+                console.log("First log", allForecastDetails);
                 allForecastDetails = data;
-                console.log(allForecastDetails)
+                console.log("Second log", allForecastDetails)
+                printCityInfo();
             });
         }else{
             promptEl = "Error: City Forecast Not Found.";
@@ -111,18 +111,20 @@ function printCityInfo(){
     cityNameEl.textContent = allCityDetails.name;
     cityDateEl.textContent = m;
 
-    for(var i = 0; i < 4; i++){
+    for(var i = 0; i < 3; i++){
         var cityStatItemEl = document.createElement("p");
         
         if(i === 0){
-            cityStatItemEl.textContent = "Temp:";
+            cityStatItemEl.textContent = "Temp: " + allCityDetails.main.temp;
         }else if(i === 1){
-            cityStatItemEl.textContent = "Wind:";
+            cityStatItemEl.textContent = "Wind: " + allCityDetails.wind.speed;
         }else if(i === 2){
-            cityStatItemEl.textContent = "Humidity:";
-        }else if(i === 3){
-            cityStatItemEl.textContent = "UV Index:";
-        }else{
+            cityStatItemEl.textContent = "Humidity: " + allCityDetails.main.humidity;
+        }
+        // else if(i === 3){
+        //     cityStatItemEl.textContent = "UV Index: " + allCityDetails;
+        // }
+        else{
             console.log("Out of range");
         }
 
@@ -133,38 +135,37 @@ function printCityInfo(){
     fiveDayForecastEl.removeAttribute("hidden");
 
     // Create 5 days blocks
-    for(var i = 0; i < 5; i++){
+    while(j < 42){
         var dayBlockEl = document.createElement("div");
         allDayBlocks.appendChild(dayBlockEl);
 
         // For each day block, loop 5 times to add each stat
-        for(var x = 0; x < 5; x++){
+        for(var x = 0; x < 5; x++){ // X ISN'T INCREMENTING UPWARDS
             var dayStatEl = document.createElement("p");
             dayStatEl.className = "day-block-text"
             if(x === 0){
-                // get the next 5 days of the week
+                // ON 1ST LOOP: get the next 5 days of the week
                 dayStatEl.textContent = getNextFiveDays(i);
             }else if(x === 1){
-                // get the weather icon
+                // ON 2ND LOOP: get the weather icon
                 dayStatEl.textContent = "icn";
                 dayStatEl.setAttribute("id", "weather-icon");
             }else if(x === 2){
-                // get the temperature
+                // ON 3RD LOOP: get the temperature
                 if(i = 0){ // If it's the first of 5 days
                     dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
                 }else{
-                    j += 8;
-                    console.log(j, allForecastDetails);
+                    console.log(j);
                     dayStatEl.textContent = "Temp: " + allForecastDetails.list[j].main.temp;
                 }
             }else if(x === 3){
-                // get the wind speed
-                console.log(j);
+                // ON 4TH LOOP: get the wind speed
+                console.log("FORECAST", allForecastDetails.list[j]);
                 dayStatEl.textContent = "Wind: " + allForecastDetails.list[j].wind.speed;
             }else if(x === 4){
-                // get the humidity
-                console.log(j);
+                // ON THE 5TH LOOP: get the humidity
                 dayStatEl.textContent = "Humidity: " + allForecastDetails.list[j].main.humidity;
+                j += 8;
             }else{
                 console.log("Out of range");
             }
@@ -173,6 +174,7 @@ function printCityInfo(){
         }
                     
     }
+    // reset j
     j = 5;
 }
 
@@ -184,6 +186,7 @@ function getNextFiveDays(dayNum){
         dayOfWeek = moment().add(1,"days").format("ddd, MMM Do");
     }else if(dayNum === 2){
         dayOfWeek = moment().add(2,"days").format("ddd, MMM Do");
+        console.log("2 days added: ", dayOfWeek);
     }else if(dayNum === 3){
         dayOfWeek = moment().add(3,"days").format("ddd, MMM Do");
     }else if(dayNum === 4){
