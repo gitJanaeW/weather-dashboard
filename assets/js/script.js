@@ -86,7 +86,7 @@ function fetchFiveDayForecast(){
             response.json().then(function(data){
                 // save data globally
                 allForecastDetails = data;
-                printCityInfo();
+                showWeatherResults();
             });
         }else{
             promptEl = "Error: City Forecast Not Found.";
@@ -96,41 +96,12 @@ function fetchFiveDayForecast(){
     });
 }
 
-function printCityInfo(){
-    // remove empty page, if any
-    if(emptyPage){
-        forecastSectionEl.removeChild(emptyMainEl);
-    }
-
-    // create city info section
-    cityInfoEl.removeAttribute("hidden");
-
-    cityNameEl.textContent = allCityDetails.name;
-    cityDateEl.textContent = m;
-
-    for(var i = 0; i < 3; i++){
-        var cityStatItemEl = document.createElement("p");
-        
-        if(i === 0){
-            cityStatItemEl.textContent = "Temp: " + allCityDetails.main.temp;
-        }else if(i === 1){
-            cityStatItemEl.textContent = "Wind: " + allCityDetails.wind.speed;
-        }else if(i === 2){
-            cityStatItemEl.textContent = "Humidity: " + allCityDetails.main.humidity;
-        }
-        // else if(i === 3){
-        //     cityStatItemEl.textContent = "UV Index: " + allCityDetails;
-        // }
-        else{
-            console.log("Out of range");
-        }
-
-        cityStatsEl.appendChild(cityStatItemEl);
-    }
+function showWeatherResults(){
+    // create city weather results for current day
+    printCityWeather();
 
     // create 5 day forecast section
     fiveDayForecastEl.removeAttribute("hidden");
-
     // create 5 days blocks
     while(j < 42){
         var dayBlockEl = document.createElement("div");
@@ -202,15 +173,15 @@ function printCityInfo(){
 function getNextFiveDays(dayNum){
     var dayOfWeek = undefined;
     if(dayNum === 0){
-        dayOfWeek = moment().format("ddd, MMM Do");
+        dayOfWeek = moment().format("dddd");
     }else if(dayNum === 1){
-        dayOfWeek = moment().add(1,"days").format("ddd, MMM Do");
+        dayOfWeek = moment().add(1,"days").format("dddd");
     }else if(dayNum === 2){
-        dayOfWeek = moment().add(2,"days").format("ddd, MMM Do");
+        dayOfWeek = moment().add(2,"days").format("dddd");
     }else if(dayNum === 3){
-        dayOfWeek = moment().add(3,"days").format("ddd, MMM Do");
+        dayOfWeek = moment().add(3,"days").format("dddd");
     }else if(dayNum === 4){
-        dayOfWeek = moment().add(4,"days").format("ddd, MMM Do");
+        dayOfWeek = moment().add(4,"days").format("dddd");
     }else{
         dayOfWeek = "Exceeded 5-day limit";
     }
@@ -218,6 +189,37 @@ function getNextFiveDays(dayNum){
     return dayOfWeek;
 }
 
+function printCityWeather(){
+    // remove empty page, if any
+    if(emptyPage){
+        forecastSectionEl.removeChild(emptyMainEl);
+    }else{ // else, remove weather page
+        console.log("Remove weather page");
+    }
+
+    // create city info section
+    cityInfoEl.removeAttribute("hidden");
+
+    cityNameEl.textContent = allCityDetails.name;
+    cityDateEl.textContent = m;
+
+    for(var i = 0; i < 3; i++){
+        var cityStatItemEl = document.createElement("p");
+        
+        if(i === 0){
+            cityStatItemEl.textContent = "Temp: " + allCityDetails.main.temp;
+        }else if(i === 1){
+            cityStatItemEl.textContent = "Wind: " + allCityDetails.wind.speed;
+        }else if(i === 2){
+            cityStatItemEl.textContent = "Humidity: " + allCityDetails.main.humidity;
+        } // NOTE: I couldn't add the UV Index feature since it's deprecated
+        else{
+            console.log("Out of range");
+        }
+
+        cityStatsEl.appendChild(cityStatItemEl);
+    }
+}
 
 // GET THE RESULTS
 function returnResults(cityResults){
