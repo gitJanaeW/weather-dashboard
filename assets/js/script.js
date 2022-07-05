@@ -19,6 +19,7 @@ var allForecastDetails = undefined;
 // Checkers and incrementors
 var emptyPage = false;
 var j = 5;
+var i = 0;
 // time and date
 var m = moment().format("dddd, MMMM Do, YYYY, h:mm a");
 // var dt_text = moment().format("YYYY-MM-DD hh:mm:ss");
@@ -50,14 +51,12 @@ function getCityInput(e){
         return;
     }else{
         fetchCityWeather(input);
-        console.log(m);
     }
 }
 
 // FETCH API AND PARSE RESULTS
 function fetchCityWeather(cityName){
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=20d2e8b234ab2aab32059e9826a39af0";
-    console.log("City:", apiUrl);
     fetch(apiUrl).then(function(response){
         if(response.ok){
             // Parse the response (data) with json
@@ -80,15 +79,13 @@ function fetchCityWeather(cityName){
 function fetchFiveDayForecast(){
     var latLong = [allCityDetails.coord.lat, allCityDetails.coord.lon]
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLong[0] + "&lon=" + latLong[1] + "&appid=20d2e8b234ab2aab32059e9826a39af0";
-    console.log("FETCHED:", apiUrl)
+    console.log("FETCHED:", apiUrl);
     fetch(apiUrl).then(function(response){
         if(response.ok){
             // Parse the response (data) with json
             response.json().then(function(data){
                 // save data globally
-                console.log("First log", allForecastDetails);
                 allForecastDetails = data;
-                console.log("Second log", allForecastDetails)
                 printCityInfo();
             });
         }else{
@@ -134,33 +131,55 @@ function printCityInfo(){
     // create 5 day forecast section
     fiveDayForecastEl.removeAttribute("hidden");
 
-    // Create 5 days blocks
+    // create 5 days blocks
     while(j < 42){
         var dayBlockEl = document.createElement("div");
+        // determine background color
+        var weatherType = allForecastDetails.list[j].weather[0].id.toString();
+        if(weatherType.startsWith("2") // Thunderstorm
+        || weatherType.startsWith("6")){ // Snow
+            dayBlockEl.style.backgroundColor = "rgb(132, 137, 168)";
+        }
+        else if(weatherType.startsWith("3") // Drizzle
+        || weatherType.startsWith("5")){ // Rain)
+            dayBlockEl.style.backgroundColor = "rbg(163, 183, 217)";
+        }
+        else if(weatherType.startsWith("8") // Clear OR CLouds
+        || weatherType){
+            dayBlockEl.style.backgroundColor = "rbg(163, 183, 217)";
+        }
         allDayBlocks.appendChild(dayBlockEl);
 
         // For each day block, loop 5 times to add each stat
-        for(var x = 0; x < 5; x++){ // X ISN'T INCREMENTING UPWARDS
-            var dayStatEl = document.createElement("p");
+        for(var x = 0; x < 5; x++){
+            if(x === 1){
+                var dayStatEl = document.createElement("img");
+            }else{
+                var dayStatEl = document.createElement("p");
+            }
             dayStatEl.className = "day-block-text"
+
             if(x === 0){
                 // ON 1ST LOOP: get the next 5 days of the week
+                console.log("Day value", i);
                 dayStatEl.textContent = getNextFiveDays(i);
             }else if(x === 1){
                 // ON 2ND LOOP: get the weather icon
-                dayStatEl.textContent = "icn";
-                dayStatEl.setAttribute("id", "weather-icon");
+                console.log("dayStatEl", i);
+                if(i === 0){
+                    dayStatEl.setAttribute("src", "http://openweathermap.org/img/wn/" + allCityDetails.weather[0].icon + "@2x.png");
+                }else{
+                    dayStatEl.setAttribute("src", "http://openweathermap.org/img/wn/" + allForecastDetails.list[j].weather[0].icon + "@2x.png");
+                }
             }else if(x === 2){
                 // ON 3RD LOOP: get the temperature
-                if(i = 0){ // If it's the first of 5 days
+                if(i === 0){ // If it's the first of 5 days
                     dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
                 }else{
-                    console.log(j);
                     dayStatEl.textContent = "Temp: " + allForecastDetails.list[j].main.temp;
                 }
             }else if(x === 3){
                 // ON 4TH LOOP: get the wind speed
-                console.log("FORECAST", allForecastDetails.list[j]);
                 dayStatEl.textContent = "Wind: " + allForecastDetails.list[j].wind.speed;
             }else if(x === 4){
                 // ON THE 5TH LOOP: get the humidity
@@ -172,10 +191,12 @@ function printCityInfo(){
             dayBlockEl.className = "day-block";
             dayBlockEl.appendChild(dayStatEl);
         }
-                    
+        // increment i to count days
+        i++;        
     }
     // reset j
     j = 5;
+    i = 0;
 }
 
 function getNextFiveDays(dayNum){
@@ -186,7 +207,6 @@ function getNextFiveDays(dayNum){
         dayOfWeek = moment().add(1,"days").format("ddd, MMM Do");
     }else if(dayNum === 2){
         dayOfWeek = moment().add(2,"days").format("ddd, MMM Do");
-        console.log("2 days added: ", dayOfWeek);
     }else if(dayNum === 3){
         dayOfWeek = moment().add(3,"days").format("ddd, MMM Do");
     }else if(dayNum === 4){
