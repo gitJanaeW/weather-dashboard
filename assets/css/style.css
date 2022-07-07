@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;1,100&display=swap');
 
 :root{
-    --primary-color: rgb(0, 56, 139);
-    --secondary-color: rgb(105, 199, 246);
+    --primary-color: rgb(0, 100, 139);
+    --secondary-color: rgb(172, 206, 223);
 }
 
 *{
@@ -54,10 +54,12 @@ input{
     margin: 5px 0;
     padding-left: 2px;
     border-radius: 5px;
+    max-width: 225px;
 }
 
 .btn{
     width: 30%;
+    min-width: 100px;
     padding: 15px;
     margin: 5px 0;
     font-size: large;
@@ -88,6 +90,7 @@ input{
 
 .city-info{
     background-color: var(--secondary-color);
+    margin: 0 2%;
 }
 
 .city-info{
@@ -121,6 +124,7 @@ input{
 .day-blocks{
     display: flex;
     justify-content: space-around;
+    padding-bottom: 10px;
 }
 
 .day-block{
@@ -143,7 +147,7 @@ input{
 
 .prompt-cloud{
     opacity: 50%;
-    padding: 10vh 0 0 0;
+    padding: 10vh 0 0 8vw;
     width: 50%;
     margin-left: 19%;
 }
@@ -162,7 +166,8 @@ input{
     }
 
     .search-section{
-        width: 50%;
+        width: 90%;
+        margin: auto;
     }
 
     .forecast-section{
