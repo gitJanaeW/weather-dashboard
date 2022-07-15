@@ -9,6 +9,7 @@ var cityNameEl = document.querySelector(".city-name");
 var cityDateEl = document.querySelector(".city-date");
 var cityStatsEl = document.querySelector(".city-stats");
 var allDayBlocks = document.querySelector(".day-blocks");
+var recentListEl = document.querySelector(".recent-list");
 
 var emptyMainEl = document.createElement("div");
 var input = undefined;
@@ -18,6 +19,7 @@ var allCityDetails = undefined;
 var allForecastDetails = undefined;
 // Checkers and incrementors
 var emptyPage = false;
+var savedCount = 0;
 var j = 5;
 var i = 0;
 // time and date
@@ -50,8 +52,15 @@ function getCityInput(e){
     if(input === ""){
         return;
     }else{
+        saveCity(input);
         fetchCityWeather(input);
     }
+}
+
+function getRecentCity(e){
+    var targetText = e.target.textContent;
+    saveCity(targetText);
+    fetchCityWeather(targetText);
 }
 
 // FETCH API AND PARSE RESULTS
@@ -80,7 +89,8 @@ function fetchFiveDayForecast(){
     var latLong = [allCityDetails.coord.lat, allCityDetails.coord.lon]
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latLong[0] + "&lon=" + latLong[1] + "&appid=20d2e8b234ab2aab32059e9826a39af0&units=metric";
     console.log("FETCHED:", apiUrl);
-    fetch(apiUrl).then(function(response){
+    fetch(apiUrl)
+    .then(function(response){
         if(response.ok){
             // Parse the response (data) with json
             response.json().then(function(data){
@@ -121,11 +131,16 @@ function showWeatherResults(){
             z = 163;
             dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
         }
-        else if(weatherType === "Clouds"
-        || weatherType === "Clear"){
+        else if(weatherType === "Clouds"){
             x = 163;
             y = 183;
             z = 217;
+            dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
+        } 
+        else if(weatherType === "Clear"){
+            x = 156;
+            y = 177;
+            z = 230;
             dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
         }
         allDayBlocks.appendChild(dayBlockEl);
@@ -247,11 +262,42 @@ function printDayBlockStats(dayBlockEl){
     j += 8;
 }
 
-// GET THE RESULTS
-function returnResults(cityResults){
+function saveCity(cityName){
+    // Push to local storage
+    var savedSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
+    // Make sure city name is not saved twice
+    if(!savedSearches.includes(cityName)){
+        savedSearches.push(cityName);
+    }
+    savedCount++;
+    // Make sure local storage only stores the last five cities searched
+    if(savedSearches.length > 5){
+        savedSearches.splice(0, 1);
+        savedCount = 4;
+        console.log("Saved searches: ", savedSearches, "   Saved searches length: ", savedSearches.length);
+    }
 
+    localStorage.setItem("previousSearches", JSON.stringify(savedSearches));
 }
+
+function loadPreviousSearches(){
+    var savedSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
+    console.log(savedSearches);
+    
+    if(savedSearches){
+        // Try making it an li
+        for(var i = 0; i < savedSearches.length; i++){
+            var searchedBtnEl = document.createElement("button");
+            searchedBtnEl.className = "btn recent-item";
+            searchedBtnEl.textContent = savedSearches[i];
+            recentListEl.appendChild(searchedBtnEl);
+        }
+    }
+}
+
 createEmptyPage();
+loadPreviousSearches();
 
 // EVENT LISTENERS
 searchBtnEl.addEventListener("click", getCityInput);
+recentListEl.addEventListener("click", getRecentCity);

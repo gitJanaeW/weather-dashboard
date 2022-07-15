@@ -2,7 +2,7 @@
 
 :root{
     --primary-color: rgb(0, 100, 139);
-    --secondary-color: rgb(172, 206, 223);
+    --secondary-color: rgb(156, 177, 230);
 }
 
 *{
@@ -84,7 +84,7 @@ input{
 .forecast-section{
     display: flex;
     flex-direction: column;
-    margin: 1%;
+    margin: 3% 1% 1% 1%;
     width: 65%;
 }
 
@@ -173,5 +173,11 @@ input{
     .forecast-section{
         width: 95%;
         margin: auto;
+    }
+}
+
+@media screen and (max-width: 620px) {
+    .day-blocks{
+        flex-direction: column;
     }
 }
