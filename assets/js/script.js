@@ -118,30 +118,20 @@ function showWeatherResults(){
         // determine background color
         // var weatherNum = allForecastDetails.list[j].weather[0].id.toString();
 
-        var x;
-        var y;
-        var z;
-
         var weatherType = allForecastDetails.list[j].weather[0].main
         console.log("j:", j, ",  weatherType:", weatherType);
         if(weatherType === "Drizzle" 
         || weatherType === "Rain"){ 
-            x = 127;
-            y = 131;
-            z = 163;
-            dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
+            dayBlockEl.className = "day-block color-bad";
         }
         else if(weatherType === "Clouds"){
-            x = 163;
-            y = 183;
-            z = 217;
-            dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
+            dayBlockEl.className = "day-block color-fine";
         } 
         else if(weatherType === "Clear"){
-            x = 156;
-            y = 177;
-            z = 230;
-            dayBlockEl.style.backgroundColor = 'rgb(' + x + ',' + y + ',' + z + ')';
+            dayBlockEl.className = "day-block color-good";
+        }
+        else{
+            dayBlockEl.className = "day-block color-unusual";
         }
         allDayBlocks.appendChild(dayBlockEl);
 
@@ -202,7 +192,7 @@ function printCityWeather(){
         var cityStatItemEl = document.createElement("p");
         
         if(i === 0){
-            cityStatItemEl.textContent = "Temp: " + allCityDetails.main.temp + "C";
+            cityStatItemEl.textContent = "Temp: " + allCityDetails.main.temp + "°C";
         }else if(i === 1){
             cityStatItemEl.textContent = "Wind: " + allCityDetails.wind.speed;
         }else if(i === 2){
@@ -220,6 +210,13 @@ function printCityWeather(){
 
 function printDayBlockStats(dayBlockEl){
     // For each day block, loop 5 times to add each stat
+    var dayStatContainer = document.createElement("div");
+    dayStatContainer.className = "day-container";
+
+    var dayTemp = document.createElement("p");
+    var dayWind = document.createElement("p");
+    var dayHumidity = document.createElement("p");
+
     for(var x = 0; x < 5; x++){
         if(x === 1){
             var dayStatEl = document.createElement("img");
@@ -231,6 +228,8 @@ function printDayBlockStats(dayBlockEl){
         if(x === 0){
             // ON 1ST LOOP: get the next 5 days of the week
             dayStatEl.textContent = getNextFiveDays(i);
+            dayStatEl.classList = "day-block-text week-day";
+            dayStatContainer.appendChild(dayStatEl);
         }else if(x === 1){
             // ON 2ND LOOP: get the weather icon
             if(i === 0){
@@ -238,24 +237,31 @@ function printDayBlockStats(dayBlockEl){
             }else{
                 dayStatEl.setAttribute("src", "http://openweathermap.org/img/wn/" + allForecastDetails.list[j].weather[0].icon + "@2x.png");
             }
+            dayStatEl.classList = "day-block-text no-flex icon";
+            dayStatContainer.appendChild(dayStatEl);
         }else if(x === 2){
             // ON 3RD LOOP: get the temperature
             if(i === 0){ // If it's the first of 5 days
-                dayStatEl.textContent = "Temp: " + allCityDetails.main.temp;
+                dayTemp.textContent = "Temp: " + allCityDetails.main.temp + "°C";
             }else{
-                dayStatEl.textContent = "Temp: " + allForecastDetails.list[j].main.temp;
+                dayTemp.textContent = "Temp: " + allForecastDetails.list[j].main.temp + "°C";
             }
+            dayTemp.classList = "day-block-text day-stats";
         }else if(x === 3){
             // ON 4TH LOOP: get the wind speed
-            dayStatEl.textContent = "Wind: " + allForecastDetails.list[j].wind.speed;
+            dayWind.textContent = "Wind: " + allForecastDetails.list[j].wind.speed;
+            dayWind.classList = "day-block-text day-stats";
         }else if(x === 4){
             // ON THE 5TH LOOP: get the humidity
-            dayStatEl.textContent = "Humidity: " + allForecastDetails.list[j].main.humidity;
+            dayHumidity.textContent = "Humidity: " + allForecastDetails.list[j].main.humidity;
+            dayHumidity.classList = "day-block-text day-stats";
         }else{
             console.log("Out of range");
         }
-        dayBlockEl.className = "day-block";
-        dayBlockEl.appendChild(dayStatEl);
+        dayBlockEl.appendChild(dayStatContainer);
+        dayBlockEl.appendChild(dayTemp);
+        dayBlockEl.appendChild(dayWind);
+        dayBlockEl.appendChild(dayHumidity);
     }
     // incrementors
     i++;
@@ -280,6 +286,7 @@ function saveCity(cityName){
     localStorage.setItem("previousSearches", JSON.stringify(savedSearches));
 }
 
+// create save buttons for previous searches
 function loadPreviousSearches(){
     var savedSearches = JSON.parse(localStorage.getItem("previousSearches")) || [];
     console.log(savedSearches);

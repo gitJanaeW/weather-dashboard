@@ -17,14 +17,15 @@ html{
 
 /* HEADER */
 header{
-    background-color: var(--primary-color);
+    background-image: linear-gradient(var(--primary-color), rgb(0, 75, 105));
     display: flex;
     justify-content: center;
-    padding: 2vh;
+    padding: 1vh;
 }
 
 header h1{
     color: whitesmoke;
+    font-size: x-large;
 }
 
 /* BOTH SECTIONS */
@@ -88,8 +89,12 @@ input{
     width: 65%;
 }
 
+.five-day-h2{
+    margin-left: 1rem;
+}
+
 .city-info{
-    background-color: var(--secondary-color);
+    background-image: linear-gradient(to right, var(--secondary-color), rgb(255, 255, 255));
     margin: 0 2%;
 }
 
@@ -129,9 +134,7 @@ input{
 
 .day-block{
     text-align: center;
-    background-color: grey;
-    width: 20%;
-    max-width: 150px;
+    width: 100%;
     height: 40vh;
     padding: 5px 0;
     margin: 2px 1%;
@@ -143,7 +146,17 @@ input{
     color: whitesmoke;
 }
 
+.color-bad{
+    background-image: linear-gradient(rgb(127,131,163), rgb(116, 120, 155));
+}
 
+.color-fine{
+    background-image: linear-gradient(rgb(147, 176, 226), rgb(130, 158, 208));
+}
+
+.color-good{background-image: linear-gradient(rgb(119, 170, 247), rgb(109, 141, 237));}
+
+.color-unusual{background-image: linear-gradient(grey, rgb(114, 114, 119));}
 
 .prompt-cloud{
     opacity: 50%;
@@ -177,7 +190,33 @@ input{
 }
 
 @media screen and (max-width: 620px) {
-    .day-blocks{
+    .city-header{
         flex-direction: column;
+        align-items: flex-start;
     }
+    div .day-blocks{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .day-block{
+        display: flex;
+        max-height: 15vh;
+        padding-top: 0;
+    }
+
+    .day-container{
+        margin: auto 0;
+    }
+
+   .day-stats{
+    margin: auto 18px;
+   }
+
+   .icon{
+    position: relative;
+    bottom: 3px;
+    height: 15vh;
+    overflow: hidden;
+   }
 }
